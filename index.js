@@ -81,7 +81,7 @@ var raster = new TileLayer({
 
 var village = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/7e91e95d45c5c51fc0171f03e0a619c3/raw/f35623ba2e30eebafc5d84ca84794f0354643f38/village-quantized.topo.json',
+        url: 'https://gist.githubusercontent.com/imdataman/7e91e95d45c5c51fc0171f03e0a619c3/raw/c6ae345a5135432b1d7ca7db5c50015e4a3780c0/village-quantized.topo.json',
         format: new TopoJSON({
             // don't want to render the full world polygon (stored as 'land' layer),
             // which repeats all countries
@@ -97,7 +97,7 @@ var village = new VectorLayer({
 
 var town = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/20392f01afe76d173a1300a7d1e69eaa3ba8792f/town-quantized-topo.json',
+        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/15b6977ac19b96a50c4bfa752d26e5bac8092fe0/town-quantized-topo.json',
         format: new TopoJSON({
             // don't want to render the full world polygon (stored as 'land' layer),
             // which repeats all countries
@@ -114,7 +114,7 @@ var town = new VectorLayer({
 
 var county = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/1540bf31607d1cecf22a5af064a468147516ab32/county-quantized-topo.json',
+        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/270f2afaf40af53f398bcd5c3ab393dcbbce5f19/county-quantized-topo.json',
         format: new TopoJSON({
             // don't want to render the full world polygon (stored as 'land' layer),
             // which repeats all countries
