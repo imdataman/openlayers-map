@@ -16,6 +16,7 @@ import {
     fromLonLat
 } from 'ol/proj';
 import OSM from 'ol/source/OSM';
+import Overlay from 'ol/Overlay';
 
 var getStyle = function (feature, resolution) {
     if (feature.get('pop') >= 1 && feature.get('pop') < 500) {
@@ -82,10 +83,7 @@ var raster = new TileLayer({
 var village = new VectorLayer({
     source: new VectorSource({
         url: 'https://gist.githubusercontent.com/imdataman/7e91e95d45c5c51fc0171f03e0a619c3/raw/c6ae345a5135432b1d7ca7db5c50015e4a3780c0/village-quantized.topo.json',
-        format: new TopoJSON({
-            // don't want to render the full world polygon (stored as 'land' layer),
-            // which repeats all countries
-        }),
+        format: new TopoJSON({}),
         overlaps: false
     }),
     opacity: 0.8,
@@ -98,10 +96,7 @@ var village = new VectorLayer({
 var town = new VectorLayer({
     source: new VectorSource({
         url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/15b6977ac19b96a50c4bfa752d26e5bac8092fe0/town-quantized-topo.json',
-        format: new TopoJSON({
-            // don't want to render the full world polygon (stored as 'land' layer),
-            // which repeats all countries
-        }),
+        format: new TopoJSON({}),
         overlaps: false
     }),
     opacity: 0.8,
@@ -115,10 +110,7 @@ var town = new VectorLayer({
 var county = new VectorLayer({
     source: new VectorSource({
         url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/270f2afaf40af53f398bcd5c3ab393dcbbce5f19/county-quantized-topo.json',
-        format: new TopoJSON({
-            // don't want to render the full world polygon (stored as 'land' layer),
-            // which repeats all countries
-        }),
+        format: new TopoJSON({}),
         overlaps: false
     }),
     opacity: 0.8,
@@ -136,3 +128,25 @@ var map = new Map({
         zoom: 8
     })
 });
+
+var tooltip = document.getElementById('tooltip');
+var overlay = new Overlay({
+    element: tooltip,
+    offset: [10, 0],
+    positioning: 'bottom-left'
+});
+map.addOverlay(overlay);
+
+function displayTooltip(evt) {
+    var pixel = evt.pixel;
+    var feature = map.forEachFeatureAtPixel(pixel, function (feature) {
+        return feature;
+    });
+    tooltip.style.display = feature ? '' : 'none';
+    if (feature) {
+        overlay.setPosition(evt.coordinate);
+        tooltip.innerHTML = feature.get('name') + "<br/>" + feature.get('pop') + "人/km²";
+    }
+};
+
+map.on('pointermove', displayTooltip);
