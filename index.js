@@ -76,8 +76,8 @@ var getStyle = function (feature, resolution, threshold) {
     }
 };
 
-var halfMapWidth = document.getElementById('map').offsetWidth / 2;
-var halfMapHeight = document.getElementById('map').offsetHeight / 2;
+var halfMapWidth = document.getElementById('map').offsetWidth / 3;
+var halfMapHeight = document.getElementById('map').offsetHeight / 3;
 
 var raster = new TileLayer({
     source: new OSM()
@@ -89,7 +89,7 @@ var village = new VectorLayer({
         format: new TopoJSON({}),
         overlaps: false
     }),
-    opacity: 0.8,
+    opacity: 1,
     maxResolution: 20,
     style: function (feature, resolution) {
         return getStyle(feature, resolution, [1, 500, 1000, 2500, 5000, 10000, 25000, 50000]);
@@ -102,7 +102,7 @@ var town = new VectorLayer({
         format: new TopoJSON({}),
         overlaps: false
     }),
-    opacity: 0.8,
+    opacity: 1,
     minResolution: 20,
     maxResolution: 200,
     style: function (feature, resolution) {
@@ -117,11 +117,11 @@ var townBorder = new VectorLayer({
         overlaps: false
     }),
     type: "border",
-    opacity: 0.8,
+    opacity: 1,
     maxResolution: 20,
     style: new Style({
         stroke: new Stroke({
-            color: '#319FD3',
+            color: 'white',
             width: 1
         })
     })
@@ -133,7 +133,7 @@ var county = new VectorLayer({
         format: new TopoJSON({}),
         overlaps: false
     }),
-    opacity: 0.8,
+    opacity: 1,
     minResolution: 200,
     style: function (feature, resolution) {
         return getStyle(feature, resolution, [1, 100, 250, 500, 1000, 2500, 5000, 10000]);
@@ -147,19 +147,19 @@ var countyBorder = new VectorLayer({
         overlaps: false
     }),
     type: "border",
-    opacity: 0.8,
+    opacity: 1,
     minResolution: 20,
     maxResolution: 200,
     style: new Style({
         stroke: new Stroke({
-            color: '#319FD3',
+            color: 'white',
             width: 1
         })
     })
 });
 
 var map = new Map({
-    layers: [raster, village, town, county, townBorder, countyBorder],
+    layers: [village, town, county, townBorder, countyBorder],
     target: 'map',
     view: new View({
         center: fromLonLat([120.973882, 23.97565]),
