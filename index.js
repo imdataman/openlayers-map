@@ -167,10 +167,18 @@ var map = new Map({
     })
 });
 
+
+
 var tooltip = document.getElementById('tooltip');
 var overlay = new Overlay({
     element: tooltip
 });
+
+/* var mapContainer = document.getElementById('map'); */
+
+/* mapContainer.appendChild(document.getElementById('villageLegend'));
+mapContainer.appendChild(document.getElementById('townLegend'));
+mapContainer.appendChild(document.getElementById('countyLegend')); */
 
 map.addOverlay(overlay);
 
@@ -203,4 +211,22 @@ function displayTooltip(evt) {
     }
 };
 
+/* function changeLegend() {
+    var newRes = map.getView().getResolution();
+    if (newRes >= 200) {
+        document.getElementById('villageLegend').style.visibility = "hidden";
+        document.getElementById('townLegend').style.visibility = "hidden";
+        document.getElementById('countyLegend').style.visibility = "visible"
+    } else if (newRes < 200 && newRes >= 20) {
+        document.getElementById('villageLegend').style.visibility = "hidden";
+        document.getElementById('townLegend').style.visibility = "visible";
+        document.getElementById('countyLegend').style.visibility = "hidden";
+    } else {
+        document.getElementById('villageLegend').style.visibility = "visible";
+        document.getElementById('townLegend').style.visibility = "hidden";
+        document.getElementById('countyLegend').style.visibility = "hidden";
+    }
+} */
+
 map.on('pointermove', displayTooltip);
+/* map.on('moveend', changeLegend); */
