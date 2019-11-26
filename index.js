@@ -18,50 +18,50 @@ import {
 import OSM from 'ol/source/OSM';
 import Overlay from 'ol/Overlay';
 
-var getStyle = function (feature, resolution) {
-    if (feature.get('pop') >= 1 && feature.get('pop') < 500) {
+var getStyle = function (feature, resolution, threshold) {
+    if (feature.get('pop') >= threshold[0] && feature.get('pop') < threshold[1]) {
         return new Style({
             fill: new Fill({
                 color: "#f7fbff"
             })
         });
-    } else if (feature.get('pop') >= 500 && feature.get('pop') < 1000) {
+    } else if (feature.get('pop') >= threshold[1] && feature.get('pop') < threshold[2]) {
         return new Style({
             fill: new Fill({
                 color: "#deebf7"
             })
         });
-    } else if (feature.get('pop') >= 1000 && feature.get('pop') < 2500) {
+    } else if (feature.get('pop') >= threshold[2] && feature.get('pop') < threshold[3]) {
         return new Style({
             fill: new Fill({
                 color: "#c6dbef"
             })
         });
-    } else if (feature.get('pop') >= 2500 && feature.get('pop') < 5000) {
+    } else if (feature.get('pop') >= threshold[3] && feature.get('pop') < threshold[4]) {
         return new Style({
             fill: new Fill({
                 color: "#9ecae1"
             })
         });
-    } else if (feature.get('pop') >= 5000 && feature.get('pop') < 10000) {
+    } else if (feature.get('pop') >= threshold[4] && feature.get('pop') < threshold[5]) {
         return new Style({
             fill: new Fill({
                 color: "#6baed6"
             })
         });
-    } else if (feature.get('pop') >= 10000 && feature.get('pop') < 25000) {
+    } else if (feature.get('pop') >= threshold[5] && feature.get('pop') < threshold[6]) {
         return new Style({
             fill: new Fill({
                 color: "#4292c6"
             })
         });
-    } else if (feature.get('pop') >= 25000 && feature.get('pop') < 50000) {
+    } else if (feature.get('pop') >= threshold[6] && feature.get('pop') < threshold[7]) {
         return new Style({
             fill: new Fill({
                 color: "#2171b5"
             })
         });
-    } else if (feature.get('pop') >= 50000) {
+    } else if (feature.get('pop') >= threshold[7]) {
         return new Style({
             fill: new Fill({
                 color: "#084594"
@@ -89,7 +89,7 @@ var village = new VectorLayer({
     opacity: 0.8,
     maxResolution: 20,
     style: function (feature, resolution) {
-        return getStyle(feature, resolution);
+        return getStyle(feature, resolution, [1, 500, 1000, 2500, 5000, 10000, 25000, 50000]);
     }
 });
 
@@ -103,8 +103,25 @@ var town = new VectorLayer({
     minResolution: 20,
     maxResolution: 200,
     style: function (feature, resolution) {
-        return getStyle(feature, resolution);
+        return getStyle(feature, resolution, [1, 250, 500, 1000, 2500, 5000, 10000, 25000]);
     }
+});
+
+var townBorder = new VectorLayer({
+    source: new VectorSource({
+        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/15b6977ac19b96a50c4bfa752d26e5bac8092fe0/town-quantized-topo.json',
+        format: new TopoJSON({}),
+        overlaps: false
+    }),
+    type: "border",
+    opacity: 0.8,
+    maxResolution: 20,
+    style: new Style({
+        stroke: new Stroke({
+          color: '#319FD3',
+          width: 1
+        })
+      })
 });
 
 var county = new VectorLayer({
@@ -116,12 +133,30 @@ var county = new VectorLayer({
     opacity: 0.8,
     minResolution: 200,
     style: function (feature, resolution) {
-        return getStyle(feature, resolution);
+        return getStyle(feature, resolution, [1, 100, 250, 500, 1000, 2500, 5000, 10000]);
     }
 });
 
+var countyBorder = new VectorLayer({
+    source: new VectorSource({
+        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/270f2afaf40af53f398bcd5c3ab393dcbbce5f19/county-quantized-topo.json',
+        format: new TopoJSON({}),
+        overlaps: false
+    }),
+    type: "border",
+    opacity: 0.8,
+    minResolution: 20,
+    maxResolution: 200,
+    style: new Style({
+        stroke: new Stroke({
+          color: '#319FD3',
+          width: 1
+        })
+      })
+});
+
 var map = new Map({
-    layers: [raster, village, town, county],
+    layers: [raster, village, town, county, townBorder, countyBorder],
     target: 'map',
     view: new View({
         center: fromLonLat([120.973882, 23.97565]),
@@ -141,6 +176,10 @@ function displayTooltip(evt) {
     var pixel = evt.pixel;
     var feature = map.forEachFeatureAtPixel(pixel, function (feature) {
         return feature;
+    }, {
+        layerFilter: function (layer) {
+            return layer.get('type') !== 'border';
+        }
     });
     tooltip.style.display = feature ? '' : 'none';
     if (feature) {
