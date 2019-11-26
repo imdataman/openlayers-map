@@ -76,6 +76,9 @@ var getStyle = function (feature, resolution, threshold) {
     }
 };
 
+var taichung = fromLonLat([120.6736877, 24.1415118]);
+var taipei = fromLonLat([121.5642203, 25.0337007]);
+
 var halfMapWidth = document.getElementById('map').offsetWidth / 3;
 var halfMapHeight = document.getElementById('map').offsetHeight / 3;
 
@@ -89,7 +92,7 @@ var village = new VectorLayer({
         format: new TopoJSON({}),
         overlaps: false
     }),
-    opacity: 1,
+    opacity: 0.8,
     maxResolution: 20,
     style: function (feature, resolution) {
         return getStyle(feature, resolution, [1, 500, 1000, 2500, 5000, 10000, 25000, 50000]);
@@ -102,7 +105,7 @@ var town = new VectorLayer({
         format: new TopoJSON({}),
         overlaps: false
     }),
-    opacity: 1,
+    opacity: 0.8,
     minResolution: 20,
     maxResolution: 200,
     style: function (feature, resolution) {
@@ -117,7 +120,7 @@ var townBorder = new VectorLayer({
         overlaps: false
     }),
     type: "border",
-    opacity: 1,
+    opacity: 0.8,
     maxResolution: 20,
     style: new Style({
         stroke: new Stroke({
@@ -133,7 +136,7 @@ var county = new VectorLayer({
         format: new TopoJSON({}),
         overlaps: false
     }),
-    opacity: 1,
+    opacity: 0.8,
     minResolution: 200,
     style: function (feature, resolution) {
         return getStyle(feature, resolution, [1, 100, 250, 500, 1000, 2500, 5000, 10000]);
@@ -147,7 +150,7 @@ var countyBorder = new VectorLayer({
         overlaps: false
     }),
     type: "border",
-    opacity: 1,
+    opacity: 0.8,
     minResolution: 20,
     maxResolution: 200,
     style: new Style({
@@ -158,13 +161,15 @@ var countyBorder = new VectorLayer({
     })
 });
 
+var view = new View({
+    center: fromLonLat([120.973882, 23.97565]),
+    zoom: 8
+});
+
 var map = new Map({
-    layers: [village, town, county, townBorder, countyBorder],
+    layers: [raster, village, town, county, townBorder, countyBorder],
     target: 'map',
-    view: new View({
-        center: fromLonLat([120.973882, 23.97565]),
-        zoom: 8
-    })
+    view: view
 });
 
 
@@ -227,6 +232,48 @@ function displayTooltip(evt) {
         document.getElementById('countyLegend').style.visibility = "hidden";
     }
 } */
+
+function flyTo(location, done) {
+    var duration = 4000;
+    var zoom = view.getZoom();
+    var finalZoom = 14;
+    var parts = 2;
+    var called = false;
+
+    function callback(complete) {
+        --parts;
+        if (called) {
+            return;
+        }
+        if (parts === 0 || !complete) {
+            called = true;
+            done(complete);
+        }
+    }
+    view.animate({
+        center: location,
+        duration: duration
+    }, callback);
+    view.animate({
+        zoom: zoom - (zoom / 4),
+        duration: duration / 2
+    }, {
+        zoom: finalZoom,
+        duration: duration / 2
+    }, callback);
+}
+
+onClick('zoomToTaichung', function () {
+    flyTo(taichung, function () {});
+});
+
+onClick('zoomToTaipei', function () {
+    flyTo(taipei, function () {});
+});
+
+function onClick(id, callback) {
+    document.getElementById(id).addEventListener('click', callback);
+}
 
 map.on('pointermove', displayTooltip);
 /* map.on('moveend', changeLegend); */
