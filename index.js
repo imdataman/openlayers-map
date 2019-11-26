@@ -101,7 +101,7 @@ var village = new VectorLayer({
 
 var town = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/15b6977ac19b96a50c4bfa752d26e5bac8092fe0/town-quantized-topo.json',
+        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/9e0dfef60f6456bea9b4b5f6256a8e6636b7c44e/town-quantized-topo.json',
         format: new TopoJSON({}),
         overlaps: false
     }),
@@ -115,7 +115,7 @@ var town = new VectorLayer({
 
 var townBorder = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/15b6977ac19b96a50c4bfa752d26e5bac8092fe0/town-quantized-topo.json',
+        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/9e0dfef60f6456bea9b4b5f6256a8e6636b7c44e/town-quantized-topo.json',
         format: new TopoJSON({}),
         overlaps: false
     }),
@@ -132,7 +132,7 @@ var townBorder = new VectorLayer({
 
 var county = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/270f2afaf40af53f398bcd5c3ab393dcbbce5f19/county-quantized-topo.json',
+        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/77cff183c9ca947a34155be458b2f9548d5d4fa5/county-quantized-topo.json',
         format: new TopoJSON({}),
         overlaps: false
     }),
@@ -145,7 +145,7 @@ var county = new VectorLayer({
 
 var countyBorder = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/270f2afaf40af53f398bcd5c3ab393dcbbce5f19/county-quantized-topo.json',
+        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/77cff183c9ca947a34155be458b2f9548d5d4fa5/county-quantized-topo.json',
         format: new TopoJSON({}),
         overlaps: false
     }),
