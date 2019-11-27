@@ -20,9 +20,6 @@
       padding: 2px;
       font-size: 24px;
       background: white;
-      border-color: black;
-      border-width: 3px;
-      border-style: solid;
       border-radius: 4px;
       pointer-events: none;
       opacity: 0.8;
@@ -30,6 +27,31 @@
 
     .ol-overlay-container {
       pointer-events: none;
+    }
+
+    #tooltip:after,
+    #tooltip:before {
+      top: 100%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    #tooltip:after {
+      border-top-color: white;
+      border-width: 10px;
+      left: 128px;
+      margin-left: -10px;
+    }
+
+    #tooltip:before {
+      border-top-color: #cccccc;
+      border-width: 11px;
+      left: 128px;
+      margin-left: -11px;
     }
 
     /* svg {

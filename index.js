@@ -80,7 +80,7 @@ var taichung = fromLonLat([120.6736877, 24.1415118]);
 var taipei = fromLonLat([121.5642203, 25.0337007]);
 
 var halfMapWidth = document.getElementById('map').offsetWidth / 3;
-var halfMapHeight = document.getElementById('map').offsetHeight / 3;
+var halfMapHeight = document.getElementById('map').offsetHeight / 5;
 
 var raster = new TileLayer({
     source: new OSM()
@@ -199,19 +199,8 @@ function displayTooltip(evt) {
     tooltip.style.display = feature ? '' : 'none';
     if (feature) {
         overlay.setPosition(evt.coordinate);
-        if (evt.pixel[0] > halfMapWidth && evt.pixel[1] > halfMapHeight) {
-            overlay.setPositioning("bottom-right");
-            overlay.setOffset([-10, 0]);
-        } else if (evt.pixel[0] > halfMapWidth && evt.pixel[1] < halfMapHeight) {
-            overlay.setPositioning("top-right");
-            overlay.setOffset([-10, 0]);
-        } else if (evt.pixel[0] < halfMapWidth && evt.pixel[1] > halfMapHeight) {
-            overlay.setPositioning("bottom-left");
-            overlay.setOffset([10, 0]);
-        } else {
-            overlay.setPositioning("top-left");
-            overlay.setOffset([10, 0]);
-        }
+        overlay.setPositioning("bottom-right");
+        overlay.setOffset([125, -15]);
         tooltip.innerHTML = feature.get('name') + "<br/>" + feature.get('pop') + "人/km²";
     }
 };
