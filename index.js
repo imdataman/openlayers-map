@@ -68,7 +68,8 @@ var taichung = fromLonLat([120.6736877, 24.1415118]),
     taipei = fromLonLat([121.5642203, 25.0337007]),
     centerCoordinate = [120.973882, 23.97565];
 
-var colorPalette = ["247,251,255", "222,235,247", "198,219,239", "158,202,225", "107,174,214", "66,146,198", "33,113,181", "8,69,148", "189,189,189"];
+var grey = "189,189,189",
+    colorPalette = ["252,251,253", "239,237,245", "218,218,235", "188,189,220", "158,154,200", "128,125,186", "106,81,163", "74,20,134", grey];
 
 var zoomThreshold = [20, 200];
 
@@ -172,14 +173,10 @@ var map = new Map({
     view: view
 });
 
-
-
 var tooltip = document.getElementById('tooltip');
 var overlay = new Overlay({
     element: tooltip
 });
-
-map.addOverlay(overlay);
 
 function displayTooltip(evt) {
     var pixel = evt.pixel;
@@ -229,19 +226,9 @@ function flyTo(location, done) {
     }, callback);
 }
 
-onClick('zoomToTaichung', function () {
-    flyTo(taichung, function () {});
-});
-
-onClick('zoomToTaipei', function () {
-    flyTo(taipei, function () {});
-});
-
 function onClick(id, callback) {
     document.getElementById(id).addEventListener('click', callback);
 }
-
-map.on('pointermove', displayTooltip);
 
 var selectPointerMove = new Select({
     condition: pointerMove,
@@ -259,4 +246,14 @@ var selectPointerMove = new Select({
     }
 });
 
+map.on('pointermove', displayTooltip);
+map.addOverlay(overlay);
 map.addInteraction(selectPointerMove);
+
+onClick('zoomToTaichung', function () {
+    flyTo(taichung, function () {});
+});
+
+onClick('zoomToTaipei', function () {
+    flyTo(taipei, function () {});
+});
