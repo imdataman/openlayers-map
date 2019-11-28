@@ -15,159 +15,159 @@ import {
 import {
     fromLonLat
 } from 'ol/proj';
-import OSM from 'ol/source/OSM';
+/* import OSM from 'ol/source/OSM'; */
 import Overlay from 'ol/Overlay';
+import XYZ from 'ol/source/XYZ';
+import Select from 'ol/interaction/Select';
+import {
+    pointerMove
+} from 'ol/events/condition';
 
-var getStyle = function (feature, resolution, threshold) {
+var styleGenerator = function (fill, stroke, fillOpacity, strokeOpacity) {
+    return new Style({
+        fill: new Fill({
+            color: 'rgba(' + fill + ',' + fillOpacity + ')'
+        }),
+        stroke: new Stroke({
+            color: 'rgba(' + stroke + ',' + strokeOpacity + ')',
+            width: lineWidth
+        })
+    })
+}
+
+var getStyle = function (feature, resolution, threshold, interaction) {
+    var featureStyle;
+    var fillOpacity = 0.8;
+    var strokeOpacity = interaction ? 1 : 0;
+    var strokeColor = "0,0,0";
     if (feature.get('pop') >= threshold[0] && feature.get('pop') < threshold[1]) {
-        return new Style({
-            fill: new Fill({
-                color: "#f7fbff"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[0], strokeColor, fillOpacity, strokeOpacity);
     } else if (feature.get('pop') >= threshold[1] && feature.get('pop') < threshold[2]) {
-        return new Style({
-            fill: new Fill({
-                color: "#deebf7"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[1], strokeColor, fillOpacity, strokeOpacity);
     } else if (feature.get('pop') >= threshold[2] && feature.get('pop') < threshold[3]) {
-        return new Style({
-            fill: new Fill({
-                color: "#c6dbef"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[2], strokeColor, fillOpacity, strokeOpacity);
     } else if (feature.get('pop') >= threshold[3] && feature.get('pop') < threshold[4]) {
-        return new Style({
-            fill: new Fill({
-                color: "#9ecae1"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[3], strokeColor, fillOpacity, strokeOpacity);
     } else if (feature.get('pop') >= threshold[4] && feature.get('pop') < threshold[5]) {
-        return new Style({
-            fill: new Fill({
-                color: "#6baed6"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[4], strokeColor, fillOpacity, strokeOpacity);
     } else if (feature.get('pop') >= threshold[5] && feature.get('pop') < threshold[6]) {
-        return new Style({
-            fill: new Fill({
-                color: "#4292c6"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[5], strokeColor, fillOpacity, strokeOpacity);
     } else if (feature.get('pop') >= threshold[6] && feature.get('pop') < threshold[7]) {
-        return new Style({
-            fill: new Fill({
-                color: "#2171b5"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[6], strokeColor, fillOpacity, strokeOpacity);
     } else if (feature.get('pop') >= threshold[7]) {
-        return new Style({
-            fill: new Fill({
-                color: "#084594"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[7], strokeColor, fillOpacity, strokeOpacity);
     } else {
-        return new Style({
-            fill: new Fill({
-                color: "#d9d9d9"
-            })
-        });
+        featureStyle = styleGenerator(colorPalette[8], strokeColor, fillOpacity, strokeOpacity);
     }
+    return featureStyle;
 };
 
-var taichung = fromLonLat([120.6736877, 24.1415118]);
-var taipei = fromLonLat([121.5642203, 25.0337007]);
+var mapboxKey = "pk.eyJ1IjoiaW1hbmR5bGluMiIsImEiOiJhYzg1YzcyNDNiYWE3MTFiY2QxN2JmNTg1ODQzOTIyZCJ9.5ZxE4iFh-Myp-eKwHk0qwg";
 
-var halfMapWidth = document.getElementById('map').offsetWidth / 3;
-var halfMapHeight = document.getElementById('map').offsetHeight / 5;
+var taichung = fromLonLat([120.6736877, 24.1415118]),
+    taipei = fromLonLat([121.5642203, 25.0337007]),
+    centerCoordinate = [120.973882, 23.97565];
 
-var raster = new TileLayer({
+var colorPalette = ["247,251,255", "222,235,247", "198,219,239", "158,202,225", "107,174,214", "66,146,198", "33,113,181", "8,69,148", "189,189,189"];
+
+var zoomThreshold = [20, 200];
+
+var lineWidth = 2,
+    borderColor = "white";
+
+var villageThreshold = [1, 500, 1000, 2500, 5000, 10000, 25000, 50000],
+    townThreshold = [1, 250, 500, 1000, 2500, 5000, 10000, 25000],
+    countyThreshold = [1, 100, 250, 500, 1000, 2500, 5000, 10000];
+
+var halfMapWidth = document.getElementById('map').offsetWidth / 3,
+    halfMapHeight = document.getElementById('map').offsetHeight / 5;
+
+var villageURL = 'https://gist.githubusercontent.com/imdataman/7e91e95d45c5c51fc0171f03e0a619c3/raw/c6ae345a5135432b1d7ca7db5c50015e4a3780c0/village-quantized.topo.json',
+    townURL = 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/9e0dfef60f6456bea9b4b5f6256a8e6636b7c44e/town-quantized-topo.json',
+    countyURL = 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/77cff183c9ca947a34155be458b2f9548d5d4fa5/county-quantized-topo.json';
+
+/* var raster = new TileLayer({
     source: new OSM()
-});
+}); */
+
+var mapboxLayer = new TileLayer({
+    source: new XYZ({
+        url: 'https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}?access_token=' + mapboxKey
+    })
+})
 
 var village = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/7e91e95d45c5c51fc0171f03e0a619c3/raw/c6ae345a5135432b1d7ca7db5c50015e4a3780c0/village-quantized.topo.json',
-        format: new TopoJSON({}),
-        overlaps: false
+        url: villageURL,
+        format: new TopoJSON({})
     }),
-    opacity: 0.8,
-    maxResolution: 20,
+    maxResolution: zoomThreshold[0],
     style: function (feature, resolution) {
-        return getStyle(feature, resolution, [1, 500, 1000, 2500, 5000, 10000, 25000, 50000]);
+        return getStyle(feature, resolution, villageThreshold, false);
     }
 });
 
 var town = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/9e0dfef60f6456bea9b4b5f6256a8e6636b7c44e/town-quantized-topo.json',
-        format: new TopoJSON({}),
-        overlaps: false
+        url: townURL,
+        format: new TopoJSON({})
     }),
-    opacity: 0.8,
-    minResolution: 20,
-    maxResolution: 200,
+    minResolution: zoomThreshold[0],
+    maxResolution: zoomThreshold[1],
     style: function (feature, resolution) {
-        return getStyle(feature, resolution, [1, 250, 500, 1000, 2500, 5000, 10000, 25000]);
+        return getStyle(feature, resolution, townThreshold, false);
     }
 });
 
 var townBorder = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/9e0dfef60f6456bea9b4b5f6256a8e6636b7c44e/town-quantized-topo.json',
-        format: new TopoJSON({}),
-        overlaps: false
+        url: townURL,
+        format: new TopoJSON({})
     }),
     type: "border",
-    opacity: 0.8,
-    maxResolution: 20,
+    maxResolution: zoomThreshold[0],
     style: new Style({
         stroke: new Stroke({
-            color: 'white',
-            width: 1
+            color: borderColor,
+            width: lineWidth
         })
     })
 });
 
 var county = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/77cff183c9ca947a34155be458b2f9548d5d4fa5/county-quantized-topo.json',
-        format: new TopoJSON({}),
-        overlaps: false
+        url: countyURL,
+        format: new TopoJSON({})
     }),
-    opacity: 0.8,
     minResolution: 200,
     style: function (feature, resolution) {
-        return getStyle(feature, resolution, [1, 100, 250, 500, 1000, 2500, 5000, 10000]);
+        return getStyle(feature, resolution, countyThreshold, false);
     }
 });
 
 var countyBorder = new VectorLayer({
     source: new VectorSource({
-        url: 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/77cff183c9ca947a34155be458b2f9548d5d4fa5/county-quantized-topo.json',
-        format: new TopoJSON({}),
-        overlaps: false
+        url: countyURL,
+        format: new TopoJSON({})
     }),
     type: "border",
-    opacity: 0.8,
-    minResolution: 20,
-    maxResolution: 200,
+    minResolution: zoomThreshold[0],
+    maxResolution: zoomThreshold[1],
     style: new Style({
         stroke: new Stroke({
-            color: 'white',
-            width: 1
+            color: borderColor,
+            width: lineWidth
         })
     })
 });
 
 var view = new View({
-    center: fromLonLat([120.973882, 23.97565]),
+    center: fromLonLat(centerCoordinate),
     zoom: 8
 });
 
 var map = new Map({
-    layers: [raster, village, town, county, townBorder, countyBorder],
+    layers: [mapboxLayer, village, town, county, townBorder, countyBorder],
     target: 'map',
     view: view
 });
@@ -266,3 +266,21 @@ function onClick(id, callback) {
 
 map.on('pointermove', displayTooltip);
 /* map.on('moveend', changeLegend); */
+
+var selectPointerMove = new Select({
+    condition: pointerMove,
+    layers: function (layer) {
+        return layer.get('type') !== 'border';
+    },
+    style: function (feature, resolution) {
+        if (feature.id_.length == 5) {
+            return getStyle(feature, resolution, countyThreshold, true);
+        } else if (feature.id_.length == 8) {
+            return getStyle(feature, resolution, townThreshold, true);
+        } else {
+            return getStyle(feature, resolution, villageThreshold, true);
+        }
+    }
+});
+
+map.addInteraction(selectPointerMove);
