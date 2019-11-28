@@ -15,49 +15,50 @@ import {
 import {
     fromLonLat
 } from 'ol/proj';
-/* import OSM from 'ol/source/OSM'; */
+import OSM from 'ol/source/OSM';
 import Overlay from 'ol/Overlay';
-import XYZ from 'ol/source/XYZ';
+// import XYZ from 'ol/source/XYZ';
 import Select from 'ol/interaction/Select';
 import {
     pointerMove
 } from 'ol/events/condition';
 
-var styleGenerator = function (fill, stroke, fillOpacity, strokeOpacity) {
+var styleGenerator = function (fill, interaction) {
+    var fillOpacity = 0.8;
+    var strokeOpacity = interaction ? 1 : 0;
+    var zIndexSelected = interaction ? 1000 : 0;
     return new Style({
         fill: new Fill({
             color: 'rgba(' + fill + ',' + fillOpacity + ')'
         }),
         stroke: new Stroke({
-            color: 'rgba(' + stroke + ',' + strokeOpacity + ')',
+            color: 'rgba(' + strokeColor + ',' + strokeOpacity + ')',
             width: lineWidth
-        })
+        }),
+        zIndex: zIndexSelected
     })
 }
 
 var getStyle = function (feature, resolution, threshold, interaction) {
     var featureStyle;
-    var fillOpacity = 0.8;
-    var strokeOpacity = interaction ? 1 : 0;
-    var strokeColor = "0,0,0";
     if (feature.get('pop') >= threshold[0] && feature.get('pop') < threshold[1]) {
-        featureStyle = styleGenerator(colorPalette[0], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[0], interaction);
     } else if (feature.get('pop') >= threshold[1] && feature.get('pop') < threshold[2]) {
-        featureStyle = styleGenerator(colorPalette[1], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[1], interaction);
     } else if (feature.get('pop') >= threshold[2] && feature.get('pop') < threshold[3]) {
-        featureStyle = styleGenerator(colorPalette[2], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[2], interaction);
     } else if (feature.get('pop') >= threshold[3] && feature.get('pop') < threshold[4]) {
-        featureStyle = styleGenerator(colorPalette[3], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[3], interaction);
     } else if (feature.get('pop') >= threshold[4] && feature.get('pop') < threshold[5]) {
-        featureStyle = styleGenerator(colorPalette[4], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[4], interaction);
     } else if (feature.get('pop') >= threshold[5] && feature.get('pop') < threshold[6]) {
-        featureStyle = styleGenerator(colorPalette[5], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[5], interaction);
     } else if (feature.get('pop') >= threshold[6] && feature.get('pop') < threshold[7]) {
-        featureStyle = styleGenerator(colorPalette[6], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[6], interaction);
     } else if (feature.get('pop') >= threshold[7]) {
-        featureStyle = styleGenerator(colorPalette[7], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[7], interaction);
     } else {
-        featureStyle = styleGenerator(colorPalette[8], strokeColor, fillOpacity, strokeOpacity);
+        featureStyle = styleGenerator(colorPalette[8], interaction);
     }
     return featureStyle;
 };
@@ -66,15 +67,16 @@ var mapboxKey = "pk.eyJ1IjoiaW1hbmR5bGluMiIsImEiOiJhYzg1YzcyNDNiYWE3MTFiY2QxN2Jm
 
 var taichung = fromLonLat([120.6736877, 24.1415118]),
     taipei = fromLonLat([121.5642203, 25.0337007]),
-    centerCoordinate = [120.973882, 23.97565];
+    centerCoordinate = [120.973882, 23.57565];
 
 var grey = "189,189,189",
-    colorPalette = ["252,251,253", "239,237,245", "218,218,235", "188,189,220", "158,154,200", "128,125,186", "106,81,163", "74,20,134", grey];
+    colorPalette = ["247,251,255", "222,235,247", "198,219,239", "158,202,225", "107,174,214", "66,146,198", "33,113,181", "8,69,148", grey];
 
 var zoomThreshold = [20, 200];
 
 var lineWidth = 2,
-    borderColor = "white";
+    strokeColor = "250,250,250",
+    borderColor = 'rgba(250,250,250,1)';
 
 var villageThreshold = [1, 500, 1000, 2500, 5000, 10000, 25000, 50000],
     townThreshold = [1, 250, 500, 1000, 2500, 5000, 10000, 25000],
@@ -83,19 +85,19 @@ var villageThreshold = [1, 500, 1000, 2500, 5000, 10000, 25000, 50000],
 var halfMapWidth = document.getElementById('map').offsetWidth / 3,
     halfMapHeight = document.getElementById('map').offsetHeight / 5;
 
-var villageURL = 'https://gist.githubusercontent.com/imdataman/7e91e95d45c5c51fc0171f03e0a619c3/raw/c6ae345a5135432b1d7ca7db5c50015e4a3780c0/village-quantized.topo.json',
-    townURL = 'https://gist.githubusercontent.com/imdataman/a1531ada33ba6028196a916e595b1454/raw/9e0dfef60f6456bea9b4b5f6256a8e6636b7c44e/town-quantized-topo.json',
-    countyURL = 'https://gist.githubusercontent.com/imdataman/9b75c4d1802595f5a5c2d8cce4ae825b/raw/77cff183c9ca947a34155be458b2f9548d5d4fa5/county-quantized-topo.json';
+var villageURL = 'https://gist.githubusercontent.com/imdataman/4837ecbf70185e6747d1b762223a9ff1/raw/421bf8d3f5f3d4489a23e27c111784e4b3ccba34/village-original.json',
+    townURL = 'https://gist.githubusercontent.com/imdataman/e5fc3ebb21f82b660e274de654e3d407/raw/b6930d6378b7e2d937a6fce5deed273ef0cc205f/town-original.json',
+    countyURL = 'https://gist.githubusercontent.com/imdataman/227f92cd2f01d0143ce6e079f51a0a0a/raw/213e72400cd9c576e2f93b9113ed7f551a4158f8/county-original.json';
 
-/* var raster = new TileLayer({
+var raster = new TileLayer({
     source: new OSM()
-}); */
+});
 
-var mapboxLayer = new TileLayer({
-    source: new XYZ({
-        url: 'https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}?access_token=' + mapboxKey
-    })
-})
+// var mapboxLayer = new TileLayer({
+//     source: new XYZ({
+//         url: 'https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}?access_token=' + mapboxKey
+//     })
+// })
 
 var village = new VectorLayer({
     source: new VectorSource({
@@ -164,18 +166,13 @@ var countyBorder = new VectorLayer({
 
 var view = new View({
     center: fromLonLat(centerCoordinate),
-    zoom: 8
+    zoom: 7.5
 });
 
 var map = new Map({
-    layers: [mapboxLayer, village, town, county, townBorder, countyBorder],
+    layers: [raster, village, town, county, townBorder, countyBorder],
     target: 'map',
     view: view
-});
-
-var tooltip = document.getElementById('tooltip');
-var overlay = new Overlay({
-    element: tooltip
 });
 
 function displayTooltip(evt) {
@@ -189,9 +186,6 @@ function displayTooltip(evt) {
     });
     tooltip.style.display = feature ? '' : 'none';
     if (feature) {
-        overlay.setPosition(evt.coordinate);
-        overlay.setPositioning("bottom-right");
-        overlay.setOffset([125, -15]);
         tooltip.innerHTML = feature.get('name') + "<br/>" + feature.get('pop') + "人/km²";
     }
 };
@@ -247,7 +241,6 @@ var selectPointerMove = new Select({
 });
 
 map.on('pointermove', displayTooltip);
-map.addOverlay(overlay);
 map.addInteraction(selectPointerMove);
 
 onClick('zoomToTaichung', function () {
