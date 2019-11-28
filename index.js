@@ -179,12 +179,6 @@ var overlay = new Overlay({
     element: tooltip
 });
 
-/* var mapContainer = document.getElementById('map'); */
-
-/* mapContainer.appendChild(document.getElementById('villageLegend'));
-mapContainer.appendChild(document.getElementById('townLegend'));
-mapContainer.appendChild(document.getElementById('countyLegend')); */
-
 map.addOverlay(overlay);
 
 function displayTooltip(evt) {
@@ -204,23 +198,6 @@ function displayTooltip(evt) {
         tooltip.innerHTML = feature.get('name') + "<br/>" + feature.get('pop') + "人/km²";
     }
 };
-
-/* function changeLegend() {
-    var newRes = map.getView().getResolution();
-    if (newRes >= 200) {
-        document.getElementById('villageLegend').style.visibility = "hidden";
-        document.getElementById('townLegend').style.visibility = "hidden";
-        document.getElementById('countyLegend').style.visibility = "visible"
-    } else if (newRes < 200 && newRes >= 20) {
-        document.getElementById('villageLegend').style.visibility = "hidden";
-        document.getElementById('townLegend').style.visibility = "visible";
-        document.getElementById('countyLegend').style.visibility = "hidden";
-    } else {
-        document.getElementById('villageLegend').style.visibility = "visible";
-        document.getElementById('townLegend').style.visibility = "hidden";
-        document.getElementById('countyLegend').style.visibility = "hidden";
-    }
-} */
 
 function flyTo(location, done) {
     var duration = 4000;
@@ -265,7 +242,6 @@ function onClick(id, callback) {
 }
 
 map.on('pointermove', displayTooltip);
-/* map.on('moveend', changeLegend); */
 
 var selectPointerMove = new Select({
     condition: pointerMove,
