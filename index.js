@@ -85,7 +85,7 @@ var villageThreshold = [1, 500, 1000, 2500, 5000, 10000, 25000, 50000],
 var halfMapWidth = document.getElementById('map').offsetWidth / 3,
     halfMapHeight = document.getElementById('map').offsetHeight / 5;
 
-var villageURL = 'https://gist.githubusercontent.com/imdataman/4837ecbf70185e6747d1b762223a9ff1/raw/421bf8d3f5f3d4489a23e27c111784e4b3ccba34/village-original.json',
+var villageURL = 'https://gist.githubusercontent.com/imdataman/4837ecbf70185e6747d1b762223a9ff1/raw/2dc73c4d3532ba7918e2a967a19a15d7b4a9f3f7/village-original.json',
     townURL = 'https://gist.githubusercontent.com/imdataman/e5fc3ebb21f82b660e274de654e3d407/raw/b6930d6378b7e2d937a6fce5deed273ef0cc205f/town-original.json',
     countyURL = 'https://gist.githubusercontent.com/imdataman/227f92cd2f01d0143ce6e079f51a0a0a/raw/213e72400cd9c576e2f93b9113ed7f551a4158f8/county-original.json';
 
