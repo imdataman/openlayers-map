@@ -63,7 +63,7 @@ var getStyle = function (feature, resolution, threshold, interaction) {
     return featureStyle;
 };
 
-var mapboxKey = "pk.eyJ1IjoiaW1hbmR5bGluMiIsImEiOiJhYzg1YzcyNDNiYWE3MTFiY2QxN2JmNTg1ODQzOTIyZCJ9.5ZxE4iFh-Myp-eKwHk0qwg";
+var mapboxKey = "<your_mapbox_key>"
 
 var taichung = fromLonLat([120.6736877, 24.1415118]),
     taipei = fromLonLat([121.5642203, 25.0337007]),
@@ -250,3 +250,22 @@ onClick('zoomToTaichung', function () {
 onClick('zoomToTaipei', function () {
     flyTo(taipei, function () {});
 });
+
+function changeLegend() {
+    var newRes = map.getView().getResolution();
+    if (newRes >= 200) {
+        document.getElementById('villageLegend').style.visibility = "hidden";
+        document.getElementById('townLegend').style.visibility = "hidden";
+        document.getElementById('countyLegend').style.visibility = "visible"
+    } else if (newRes < 200 && newRes >= 20) {
+        document.getElementById('villageLegend').style.visibility = "hidden";
+        document.getElementById('townLegend').style.visibility = "visible";
+        document.getElementById('countyLegend').style.visibility = "hidden";
+    } else {
+        document.getElementById('villageLegend').style.visibility = "visible";
+        document.getElementById('townLegend').style.visibility = "hidden";
+        document.getElementById('countyLegend').style.visibility = "hidden";
+    }
+}
+
+map.on('moveend', changeLegend);

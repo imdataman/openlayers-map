@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
 
 <head>
   <title>TopoJSON</title>
+  <meta charset="UTF-8">
   <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
   <script
     src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL">
@@ -32,11 +32,42 @@
     .ol-overlay-container {
       pointer-events: none;
     }
+
+    .floatTL {
+      position: absolute;
+      top: 200px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    img {
+      opacity: 0.8;
+    }
+
+    #villageLegend {
+      position: absolute;
+      z-index: 1;
+    }
+
+    #townLegend {
+      position: absolute;
+      z-index: 2;
+    }
+
+    #countyLegend {
+      position: absolute;
+      z-index: 3;
+    }
   </style>
 </head>
 
 <body>
   <div id="map" class="map">
+    <div class='floatTL'>
+      <img id='villageLegend' src="image/legendVillage.svg" style="height:200px">
+      <img id='townLegend' src="image/legendTown.svg" style="height:200px">
+      <img id='countyLegend' src="image/legendCounty.svg" style="height:200px">
+    </div>
   </div>
   <div id="tooltip"></div>
   <button id="zoomToTaichung">台中</button>
