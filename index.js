@@ -15,9 +15,9 @@ import {
 import {
     fromLonLat
 } from 'ol/proj';
-import OSM from 'ol/source/OSM';
+// import OSM from 'ol/source/OSM';
 import Overlay from 'ol/Overlay';
-// import XYZ from 'ol/source/XYZ';
+import XYZ from 'ol/source/XYZ';
 import Select from 'ol/interaction/Select';
 import {
     pointerMove
@@ -63,7 +63,7 @@ var getStyle = function (feature, resolution, threshold, interaction) {
     return featureStyle;
 };
 
-var mapboxKey = "<your_mapbox_key>"
+var mykey = config.MY_KEY;
 
 var taichung = fromLonLat([120.6736877, 24.1415118]),
     taipei = fromLonLat([121.5642203, 25.0337007]),
@@ -89,15 +89,15 @@ var villageURL = 'https://gist.githubusercontent.com/imdataman/4837ecbf70185e674
     townURL = 'https://gist.githubusercontent.com/imdataman/e5fc3ebb21f82b660e274de654e3d407/raw/b6930d6378b7e2d937a6fce5deed273ef0cc205f/town-original.json',
     countyURL = 'https://gist.githubusercontent.com/imdataman/227f92cd2f01d0143ce6e079f51a0a0a/raw/213e72400cd9c576e2f93b9113ed7f551a4158f8/county-original.json';
 
-var raster = new TileLayer({
-    source: new OSM()
-});
+// var raster = new TileLayer({
+//     source: new OSM()
+// });
 
-// var mapboxLayer = new TileLayer({
-//     source: new XYZ({
-//         url: 'https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}?access_token=' + mapboxKey
-//     })
-// })
+var mapboxLayer = new TileLayer({
+    source: new XYZ({
+        url: 'https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}?access_token=' + mykey
+    })
+})
 
 var village = new VectorLayer({
     source: new VectorSource({
@@ -170,7 +170,7 @@ var view = new View({
 });
 
 var map = new Map({
-    layers: [raster, village, town, county, townBorder, countyBorder],
+    layers: [mapboxLayer, village, town, county, townBorder, countyBorder],
     target: 'map',
     view: view
 });
