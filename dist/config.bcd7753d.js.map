@@ -1,0 +1,1 @@
+{"version":3,"sources":["config.js"],"names":["config","MY_KEY"],"mappings":";;;;;;AAAO,IAAMA,MAAM,GAAG;AAClBC,EAAAA,MAAM,EAAE;AADU,CAAf","file":"config.bcd7753d.js","sourceRoot":"..","sourcesContent":["export const config = {\n    MY_KEY: 'pk.eyJ1IjoiaW1hbmR5bGluMiIsImEiOiJhYzg1YzcyNDNiYWE3MTFiY2QxN2JmNTg1ODQzOTIyZCJ9.5ZxE4iFh-Myp-eKwHk0qwg'\n};"]}
