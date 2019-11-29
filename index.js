@@ -23,46 +23,7 @@ import {
     pointerMove
 } from 'ol/events/condition';
 import config from './js/config';
-
-var styleGenerator = function (fill, interaction) {
-    var fillOpacity = 0.8;
-    var strokeOpacity = interaction ? 1 : 0;
-    var zIndexSelected = interaction ? 1000 : 0;
-    return new Style({
-        fill: new Fill({
-            color: 'rgba(' + fill + ',' + fillOpacity + ')'
-        }),
-        stroke: new Stroke({
-            color: 'rgba(' + strokeColor + ',' + strokeOpacity + ')',
-            width: lineWidth
-        }),
-        zIndex: zIndexSelected
-    })
-}
-
-var getStyle = function (feature, resolution, threshold, interaction) {
-    var featureStyle;
-    if (feature.get('pop') >= threshold[0] && feature.get('pop') < threshold[1]) {
-        featureStyle = styleGenerator(colorPalette[0], interaction);
-    } else if (feature.get('pop') >= threshold[1] && feature.get('pop') < threshold[2]) {
-        featureStyle = styleGenerator(colorPalette[1], interaction);
-    } else if (feature.get('pop') >= threshold[2] && feature.get('pop') < threshold[3]) {
-        featureStyle = styleGenerator(colorPalette[2], interaction);
-    } else if (feature.get('pop') >= threshold[3] && feature.get('pop') < threshold[4]) {
-        featureStyle = styleGenerator(colorPalette[3], interaction);
-    } else if (feature.get('pop') >= threshold[4] && feature.get('pop') < threshold[5]) {
-        featureStyle = styleGenerator(colorPalette[4], interaction);
-    } else if (feature.get('pop') >= threshold[5] && feature.get('pop') < threshold[6]) {
-        featureStyle = styleGenerator(colorPalette[5], interaction);
-    } else if (feature.get('pop') >= threshold[6] && feature.get('pop') < threshold[7]) {
-        featureStyle = styleGenerator(colorPalette[6], interaction);
-    } else if (feature.get('pop') >= threshold[7]) {
-        featureStyle = styleGenerator(colorPalette[7], interaction);
-    } else {
-        featureStyle = styleGenerator(colorPalette[8], interaction);
-    }
-    return featureStyle;
-};
+import getStyle from './js/getStyle';
 
 var mykey = config.MY_KEY;
 
@@ -76,7 +37,6 @@ var grey = "189,189,189",
 var zoomThreshold = [20, 200];
 
 var lineWidth = 2,
-    strokeColor = "250,250,250",
     borderColor = 'rgba(250,250,250,1)';
 
 var villageThreshold = [1, 500, 1000, 2500, 5000, 10000, 25000, 50000],
@@ -107,7 +67,7 @@ var village = new VectorLayer({
     }),
     maxResolution: zoomThreshold[0],
     style: function (feature, resolution) {
-        return getStyle(feature, resolution, villageThreshold, false);
+        return getStyle(feature, resolution, villageThreshold, false, colorPalette);
     }
 });
 
@@ -119,7 +79,7 @@ var town = new VectorLayer({
     minResolution: zoomThreshold[0],
     maxResolution: zoomThreshold[1],
     style: function (feature, resolution) {
-        return getStyle(feature, resolution, townThreshold, false);
+        return getStyle(feature, resolution, townThreshold, false, colorPalette);
     }
 });
 
@@ -145,7 +105,7 @@ var county = new VectorLayer({
     }),
     minResolution: 200,
     style: function (feature, resolution) {
-        return getStyle(feature, resolution, countyThreshold, false);
+        return getStyle(feature, resolution, countyThreshold, false, colorPalette);
     }
 });
 
@@ -232,11 +192,11 @@ var selectPointerMove = new Select({
     },
     style: function (feature, resolution) {
         if (feature.id_.length == 5) {
-            return getStyle(feature, resolution, countyThreshold, true);
+            return getStyle(feature, resolution, countyThreshold, true, colorPalette);
         } else if (feature.id_.length == 8) {
-            return getStyle(feature, resolution, townThreshold, true);
+            return getStyle(feature, resolution, townThreshold, true, colorPalette);
         } else {
-            return getStyle(feature, resolution, villageThreshold, true);
+            return getStyle(feature, resolution, villageThreshold, true, colorPalette);
         }
     }
 });
