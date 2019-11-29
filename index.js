@@ -22,6 +22,7 @@ import Select from 'ol/interaction/Select';
 import {
     pointerMove
 } from 'ol/events/condition';
+import config from './js/config';
 
 var styleGenerator = function (fill, interaction) {
     var fillOpacity = 0.8;
