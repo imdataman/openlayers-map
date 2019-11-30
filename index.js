@@ -10,7 +10,8 @@ import VectorSource from 'ol/source/Vector';
 import {
     Fill,
     Stroke,
-    Style
+    Style,
+    Text
 } from 'ol/style';
 import {
     fromLonLat
@@ -22,10 +23,10 @@ import Select from 'ol/interaction/Select';
 import {
     pointerMove
 } from 'ol/events/condition';
-import config from './js/config';
 import getStyle from './js/getStyle';
+import GeoJSON from 'ol/format/GeoJSON';
 
-var mykey = config.MY_KEY;
+var mykey = "<mapbox_api_key>";
 
 var taichung = fromLonLat([120.6736877, 24.1415118]),
     taipei = fromLonLat([121.5642203, 25.0337007]),
@@ -36,8 +37,8 @@ var grey = "189,189,189",
 
 var zoomThreshold = [20, 200];
 
-var lineWidth = 2,
-    borderColor = 'rgba(250,250,250,1)';
+var lineWidth = 1,
+    borderColor = 'rgba(50,50,50,0.8)';
 
 var villageThreshold = [1, 500, 1000, 2500, 5000, 10000, 25000, 50000],
     townThreshold = [1, 250, 500, 1000, 2500, 5000, 10000, 25000],
@@ -56,7 +57,7 @@ var villageURL = 'https://gist.githubusercontent.com/imdataman/4837ecbf70185e674
 
 var mapboxLayer = new TileLayer({
     source: new XYZ({
-        url: 'https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}?access_token=' + mykey
+        url: 'https://api.mapbox.com/styles/v1/imandylin2/cjx2p2h3303f21dlbmhdliv02/tiles/256/{z}/{x}/{y}@2x?access_token=' + mykey
     })
 })
 
@@ -88,7 +89,7 @@ var townBorder = new VectorLayer({
         url: townURL,
         format: new TopoJSON({})
     }),
-    type: "border",
+    type: "noEvent",
     maxResolution: zoomThreshold[0],
     style: new Style({
         stroke: new Stroke({
@@ -109,12 +110,27 @@ var county = new VectorLayer({
     }
 });
 
+var background = new VectorLayer({
+    source: new VectorSource({
+        url: countyURL,
+        format: new TopoJSON({})
+    }),
+    type: "noEvent",
+    // minResolution: zoomThreshold[0],
+    // maxResolution: zoomThreshold[1],
+    style: new Style({
+        fill: new Fill({
+            color: "rgba(247,247,247,1)"
+        })
+    })
+});
+
 var countyBorder = new VectorLayer({
     source: new VectorSource({
         url: countyURL,
         format: new TopoJSON({})
     }),
-    type: "border",
+    type: "noEvent",
     minResolution: zoomThreshold[0],
     maxResolution: zoomThreshold[1],
     style: new Style({
@@ -125,13 +141,59 @@ var countyBorder = new VectorLayer({
     })
 });
 
+var style = new Style({
+    text: new Text({
+        font: '16px "Helvetica"',
+        placement: 'point',
+        fill: new Fill({
+            color: 'black'
+        }),
+        stroke: new Stroke({
+            color: '#fff',
+            width: 1
+          })
+    })
+});
+
+
+var countyLabel = new VectorLayer({
+    declutter: true,
+    type: "noEvent",
+    source: new VectorSource({
+        format: new GeoJSON(),
+        url: './county_label.geojson'
+    }),
+    style: function (feature) {
+        style.getText().setText(feature.get('COUNTYNAME'));
+        return style;
+    },
+    minResolution: 200
+})
+
+var townLabel = new VectorLayer({
+    declutter: true,
+    type: "noEvent",
+    source: new VectorSource({
+        format: new GeoJSON(),
+        url: './town_label.geojson'
+    }),
+    style: function (feature) {
+        style.getText().setText(feature.get('TOWNNAME'));
+        return style;
+    },
+    maxResolution: zoomThreshold[1]
+})
+
 var view = new View({
     center: fromLonLat(centerCoordinate),
     zoom: 7.5
 });
 
 var map = new Map({
-    layers: [mapboxLayer, village, town, county, townBorder, countyBorder],
+    layers: [background, countyBorder, townBorder
+        , village, town, county, 
+        countyLabel, townLabel
+    ],
     target: 'map',
     view: view
 });
@@ -142,7 +204,7 @@ function displayTooltip(evt) {
         return feature;
     }, {
         layerFilter: function (layer) {
-            return layer.get('type') !== 'border';
+            return layer.get('type') !== 'noEvent';
         }
     });
     tooltip.style.display = feature ? '' : 'none';
@@ -188,7 +250,7 @@ function onClick(id, callback) {
 var selectPointerMove = new Select({
     condition: pointerMove,
     layers: function (layer) {
-        return layer.get('type') !== 'border';
+        return layer.get('type') !== 'noEvent';
     },
     style: function (feature, resolution) {
         if (feature.id_.length == 5) {

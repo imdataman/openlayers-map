@@ -13,8 +13,8 @@ export default function (fill, interaction) {
             color: 'rgba(' + fill + ',' + fillOpacity + ')'
         }),
         stroke: new Stroke({
-            color: 'rgba(' + "250,250,250" + ',' + strokeOpacity + ')',
-            width: 2
+            color: 'rgba(' + "50,50,50" + ',' + strokeOpacity + ')',
+            width: 1
         }),
         zIndex: zIndexSelected
     })
