@@ -16,13 +16,6 @@ import {
 import {
     fromLonLat
 } from 'ol/proj';
-// import OSM from 'ol/source/OSM';
-import Overlay from 'ol/Overlay';
-import XYZ from 'ol/source/XYZ';
-import Select from 'ol/interaction/Select';
-import {
-    pointerMove
-} from 'ol/events/condition';
 import getStyle from './js/getStyle';
 import mobileCheck from './js/mobileCheck';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -32,6 +25,7 @@ var mobile = mobileCheck();
 var screenSize = getScreenSize();
 var initialZoom
 var fontSize
+var selectedPolygon
 
 if (mobile) {
     // document.getElementById('map').style.height = screenSize[1] + 'px';
@@ -42,11 +36,12 @@ if (mobile) {
     document.getElementById('villageLegend').style.height = 400 + 'px';
     document.getElementById('tooltip').style.fontSize = 32 + 'px';
 } else {
-    initialZoom = 7.5;
-    fontSize = 16;
+    initialZoom = 8;
+    fontSize = 18;
+    document.getElementById('countyLegend').style.height = 300 + 'px';
+    document.getElementById('townLegend').style.height = 300 + 'px';
+    document.getElementById('villageLegend').style.height = 300 + 'px';
 }
-
-var mykey = "<mapbox_api_key>";
 
 var taichung = fromLonLat([120.6736877, 24.1415118]),
     taipei = fromLonLat([121.5642203, 25.0337007]),
@@ -70,16 +65,6 @@ var halfMapWidth = document.getElementById('map').offsetWidth / 3,
 var villageURL = 'https://gist.githubusercontent.com/imdataman/4837ecbf70185e6747d1b762223a9ff1/raw/2dc73c4d3532ba7918e2a967a19a15d7b4a9f3f7/village-original.json',
     townURL = 'https://gist.githubusercontent.com/imdataman/e5fc3ebb21f82b660e274de654e3d407/raw/b6930d6378b7e2d937a6fce5deed273ef0cc205f/town-original.json',
     countyURL = 'https://gist.githubusercontent.com/imdataman/227f92cd2f01d0143ce6e079f51a0a0a/raw/213e72400cd9c576e2f93b9113ed7f551a4158f8/county-original.json';
-
-// var raster = new TileLayer({
-//     source: new OSM()
-// });
-
-var mapboxLayer = new TileLayer({
-    source: new XYZ({
-        url: 'https://api.mapbox.com/styles/v1/imandylin2/cjx2p2h3303f21dlbmhdliv02/tiles/256/{z}/{x}/{y}@2x?access_token=' + mykey
-    })
-})
 
 var village = new VectorLayer({
     source: new VectorSource({
@@ -171,7 +156,7 @@ var style = new Style({
         stroke: new Stroke({
             color: '#fff',
             width: 1
-          })
+        })
     })
 });
 
@@ -210,8 +195,7 @@ var view = new View({
 });
 
 var map = new Map({
-    layers: [background, countyBorder, townBorder
-        , village, town, county, 
+    layers: [background, countyBorder, townBorder, village, town, county,
         countyLabel, townLabel
     ],
     target: 'map',
@@ -219,6 +203,17 @@ var map = new Map({
 });
 
 function displayTooltip(evt) {
+    if (selectedPolygon) {
+        selectedPolygon.setStyle(function (feature, resolution) {
+            if (feature.id_.length == 5) {
+                return getStyle(feature, resolution, countyThreshold, false, colorPalette);
+            } else if (feature.id_.length == 8) {
+                return getStyle(feature, resolution, townThreshold, false, colorPalette);
+            } else {
+                return getStyle(feature, resolution, villageThreshold, false, colorPalette);
+            }
+        });
+    }
     var pixel = evt.pixel;
     var feature = map.forEachFeatureAtPixel(pixel, function (feature) {
         return feature;
@@ -229,62 +224,55 @@ function displayTooltip(evt) {
     });
     tooltip.style.display = feature ? '' : 'none';
     if (feature) {
+        feature.setStyle(function (feature, resolution) {
+            if (feature.id_.length == 5) {
+                return getStyle(feature, resolution, countyThreshold, true, colorPalette);
+            } else if (feature.id_.length == 8) {
+                return getStyle(feature, resolution, townThreshold, true, colorPalette);
+            } else {
+                return getStyle(feature, resolution, villageThreshold, true, colorPalette);
+            }
+        });
         tooltip.innerHTML = feature.get('name') + "<br/>" + feature.get('pop') + "人/km²";
+        selectedPolygon = feature;
     }
 };
 
-function flyTo(location, done) {
-    var duration = 4000;
-    var zoom = view.getZoom();
-    var finalZoom = 14;
-    var parts = 2;
-    var called = false;
+// function flyTo(location, done) {
+//     var duration = 4000;
+//     var zoom = view.getZoom();
+//     var finalZoom = 14;
+//     var parts = 2;
+//     var called = false;
 
-    function callback(complete) {
-        --parts;
-        if (called) {
-            return;
-        }
-        if (parts === 0 || !complete) {
-            called = true;
-            done(complete);
-        }
-    }
-    view.animate({
-        center: location,
-        duration: duration
-    }, callback);
-    view.animate({
-        zoom: zoom - (zoom / 4),
-        duration: duration / 2
-    }, {
-        zoom: finalZoom,
-        duration: duration / 2
-    }, callback);
-}
+//     function callback(complete) {
+//         --parts;
+//         if (called) {
+//             return;
+//         }
+//         if (parts === 0 || !complete) {
+//             called = true;
+//             done(complete);
+//         }
+//     }
+//     view.animate({
+//         center: location,
+//         duration: duration
+//     }, callback);
+//     view.animate({
+//         zoom: zoom - (zoom / 4),
+//         duration: duration / 2
+//     }, {
+//         zoom: finalZoom,
+//         duration: duration / 2
+//     }, callback);
+// }
 
-function onClick(id, callback) {
-    document.getElementById(id).addEventListener('click', callback);
-}
-
-var selectPointerMove = new Select({
-    condition: pointerMove,
-    layers: function (layer) {
-        return layer.get('type') !== 'noEvent';
-    },
-    style: function (feature, resolution) {
-        if (feature.id_.length == 5) {
-            return getStyle(feature, resolution, countyThreshold, true, colorPalette);
-        } else if (feature.id_.length == 8) {
-            return getStyle(feature, resolution, townThreshold, true, colorPalette);
-        } else {
-            return getStyle(feature, resolution, villageThreshold, true, colorPalette);
-        }
-    }
-});
+// function onClick(id, callback) {
+//     document.getElementById(id).addEventListener('click', callback);
+// }
 
 map.on('pointermove', displayTooltip);
-map.addInteraction(selectPointerMove);
 
 // onClick('zoomToTaichung', function () {
 //     flyTo(taichung, function () {});
