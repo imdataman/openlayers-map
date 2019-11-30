@@ -24,7 +24,27 @@ import {
     pointerMove
 } from 'ol/events/condition';
 import getStyle from './js/getStyle';
+import mobileCheck from './js/mobileCheck';
 import GeoJSON from 'ol/format/GeoJSON';
+import getScreenSize from './js/getScreenSize';
+
+var mobile = mobileCheck();
+var screenSize = getScreenSize();
+var initialZoom
+var fontSize
+
+if (mobile) {
+    document.getElementById('map').style.height = screenSize[1] + 'px';
+    initialZoom = 8.5;
+    fontSize = 32;
+    document.getElementById('countyLegend').style.height = 400 + 'px';
+    document.getElementById('townLegend').style.height = 400 + 'px';
+    document.getElementById('villageLegend').style.height = 400 + 'px';
+    document.getElementById('tooltip').style.fontSize = 32 + 'px';
+} else {
+    initialZoom = 7.5;
+    fontSize = 16;
+}
 
 var mykey = "<mapbox_api_key>";
 
@@ -143,7 +163,7 @@ var countyBorder = new VectorLayer({
 
 var style = new Style({
     text: new Text({
-        font: '16px "Helvetica"',
+        font: fontSize + 'px "Helvetica"',
         placement: 'point',
         fill: new Fill({
             color: 'black'
@@ -186,7 +206,7 @@ var townLabel = new VectorLayer({
 
 var view = new View({
     center: fromLonLat(centerCoordinate),
-    zoom: 7.5
+    zoom: initialZoom
 });
 
 var map = new Map({
@@ -266,13 +286,13 @@ var selectPointerMove = new Select({
 map.on('pointermove', displayTooltip);
 map.addInteraction(selectPointerMove);
 
-onClick('zoomToTaichung', function () {
-    flyTo(taichung, function () {});
-});
+// onClick('zoomToTaichung', function () {
+//     flyTo(taichung, function () {});
+// });
 
-onClick('zoomToTaipei', function () {
-    flyTo(taipei, function () {});
-});
+// onClick('zoomToTaipei', function () {
+//     flyTo(taipei, function () {});
+// });
 
 function changeLegend() {
     var newRes = map.getView().getResolution();
