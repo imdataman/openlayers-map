@@ -1,0 +1,29 @@
+{
+"type": "FeatureCollection",
+"name": "county_label",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTYID": "Z", "COUNTYCODE": "09007", "COUNTYNAME": "連江縣", "COUNTYENG": "Lienchiang County" }, "geometry": { "type": "Point", "coordinates": [ 120.044636325837772, 26.18348792356398 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "G", "COUNTYCODE": "10002", "COUNTYNAME": "宜蘭縣", "COUNTYENG": "Yilan County" }, "geometry": { "type": "Point", "coordinates": [ 121.645858236575123, 24.573778731943104 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "N", "COUNTYCODE": "10007", "COUNTYNAME": "彰化縣", "COUNTYENG": "Changhua County" }, "geometry": { "type": "Point", "coordinates": [ 120.468785029318596, 23.964588605365954 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "M", "COUNTYCODE": "10008", "COUNTYNAME": "南投縣", "COUNTYENG": "Nantou County" }, "geometry": { "type": "Point", "coordinates": [ 120.982077428408175, 23.842738414425064 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "P", "COUNTYCODE": "10009", "COUNTYNAME": "雲林縣", "COUNTYENG": "Yunlin County" }, "geometry": { "type": "Point", "coordinates": [ 120.373192963201035, 23.686497974728667 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "T", "COUNTYCODE": "10013", "COUNTYNAME": "屏東縣", "COUNTYENG": "Pingtung County" }, "geometry": { "type": "Point", "coordinates": [ 120.676713650677243, 22.482711232026922 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "C", "COUNTYCODE": "10017", "COUNTYNAME": "基隆市", "COUNTYENG": "Keelung City" }, "geometry": { "type": "Point", "coordinates": [ 121.72194741885373, 25.121695794560861 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "O", "COUNTYCODE": "10018", "COUNTYNAME": "新竹市", "COUNTYENG": "Hsinchu City" }, "geometry": { "type": "Point", "coordinates": [ 120.94629128840613, 24.787002803381217 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "A", "COUNTYCODE": "63000", "COUNTYNAME": "臺北市", "COUNTYENG": "Taipei City" }, "geometry": { "type": "Point", "coordinates": [ 121.553295992468989, 25.082944795685883 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "F", "COUNTYCODE": "65000", "COUNTYNAME": "新北市", "COUNTYENG": "New Taipei City" }, "geometry": { "type": "Point", "coordinates": [ 121.449581076160285, 24.924453982063802 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "B", "COUNTYCODE": "66000", "COUNTYNAME": "臺中市", "COUNTYENG": "Taichung City" }, "geometry": { "type": "Point", "coordinates": [ 120.892398328325513, 24.238210842559749 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "D", "COUNTYCODE": "67000", "COUNTYNAME": "臺南市", "COUNTYENG": "Tainan City" }, "geometry": { "type": "Point", "coordinates": [ 120.32475814399217, 23.150778275952053 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "H", "COUNTYCODE": "68000", "COUNTYNAME": "桃園市", "COUNTYENG": "Taoyuan City" }, "geometry": { "type": "Point", "coordinates": [ 121.257644987174231, 24.903294319664049 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "K", "COUNTYCODE": "10005", "COUNTYNAME": "苗栗縣", "COUNTYENG": "Miaoli County" }, "geometry": { "type": "Point", "coordinates": [ 120.922006218150003, 24.483912121122856 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "J", "COUNTYCODE": "10004", "COUNTYNAME": "新竹縣", "COUNTYENG": "Hsinchu County" }, "geometry": { "type": "Point", "coordinates": [ 121.16352910696196, 24.68109010233788 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "I", "COUNTYCODE": "10020", "COUNTYNAME": "嘉義市", "COUNTYENG": "Chiayi City" }, "geometry": { "type": "Point", "coordinates": [ 120.447931646402651, 23.480547214749254 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "Q", "COUNTYCODE": "10010", "COUNTYNAME": "嘉義縣", "COUNTYENG": "Chiayi County" }, "geometry": { "type": "Point", "coordinates": [ 120.619231666607249, 23.440460836100073 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "W", "COUNTYCODE": "09020", "COUNTYNAME": "金門縣", "COUNTYENG": "Kinmen County" }, "geometry": { "type": "Point", "coordinates": [ 118.377872575647629, 24.461429756867417 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "E", "COUNTYCODE": "64000", "COUNTYNAME": "高雄市", "COUNTYENG": "Kaohsiung City" }, "geometry": { "type": "Point", "coordinates": [ 120.615218446936254, 22.993377084961637 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "V", "COUNTYCODE": "10014", "COUNTYNAME": "臺東縣", "COUNTYENG": "Taitung County" }, "geometry": { "type": "Point", "coordinates": [ 121.04162610471991, 22.863097723164728 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "U", "COUNTYCODE": "10015", "COUNTYNAME": "花蓮縣", "COUNTYENG": "Hualien County" }, "geometry": { "type": "Point", "coordinates": [ 121.378966026416535, 23.753363613117408 ] } },
+{ "type": "Feature", "properties": { "COUNTYID": "X", "COUNTYCODE": "10016", "COUNTYNAME": "澎湖縣", "COUNTYENG": "Penghu County" }, "geometry": { "type": "Point", "coordinates": [ 119.575060349341541, 23.543058747518412 ] } }
+]
+}
