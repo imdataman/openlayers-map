@@ -34,7 +34,7 @@ var initialZoom
 var fontSize
 
 if (mobile) {
-    document.getElementById('map').style.height = screenSize[1] + 'px';
+    // document.getElementById('map').style.height = screenSize[1] + 'px';
     initialZoom = 8.5;
     fontSize = 32;
     document.getElementById('countyLegend').style.height = 400 + 'px';
