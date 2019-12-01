@@ -39,6 +39,9 @@ if (mobile) {
     document.getElementById('villageLegend').style.height = 30 + 'vh';
     document.getElementById('tooltip').style.fontSize = 32 + 'px';
     document.getElementsByClassName('floatTL')[0].style.right = '25%';
+    document.getElementsByClassName('select-css')[0].style.fontSize = '24px';
+    document.getElementsByClassName('select-css')[1].style.fontSize = '24px';
+    document.getElementsByClassName('select-css')[2].style.fontSize = '24px';
 } else {
     initialZoom = 8;
     fontSize = 18;
