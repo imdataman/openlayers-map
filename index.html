@@ -10,23 +10,27 @@
   <style>
     .map {
       width: 100%;
-      height: 98vh;;
+      height: 98vh;
+      ;
       position: relative;
     }
 
     #tooltip {
-      text-align: center;
+      text-align: left;
       display: inline-block;
-      padding: 10px 20px 10px 20px;
       font-size: 24px;
       background: white;
       border-radius: 4px;
       pointer-events: none;
       opacity: 0.8;
       position: absolute;
-      left: 20px;
-      top: 100px;
+      left: 5%;
+      bottom: 20%;
       font-family: Helvetica
+    }
+
+    #tooltip span {
+      font-weight: bold;
     }
 
     .ol-overlay-container {
@@ -34,9 +38,10 @@
     }
 
     .floatTL {
+      display: inline-block;
       position: absolute;
-      top: 220px;
-      left: 20px;
+      bottom: 50%;
+      right: 20%;
       z-index: 1000;
     }
 
@@ -58,15 +63,33 @@
       position: absolute;
       z-index: 3;
     }
+
+    div .ol-zoom {
+      width: 100%;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0);
+      top: auto;
+      bottom: 5%;
+    }
+
+    div .ol-control:hover {
+      background-color: rgba(255, 255, 255, 0);
+    }
+
+    div .ol-control button {
+      display: inline-block;
+      height: 2.5em;
+      width: 2.5em;
+    }
   </style>
 </head>
 
 <body>
   <div id="map" class="map" style="background-color: rgba(216,222,223,1)">
     <div class='floatTL'>
-      <img id='villageLegend' src="image/legendVillage.svg" style="height:200px">
-      <img id='townLegend' src="image/legendTown.svg" style="height:200px">
-      <img id='countyLegend' src="image/legendCounty.svg" style="height:200px">
+      <img id='villageLegend' src="image/legendVillage.svg">
+      <img id='townLegend' src="image/legendTown.svg">
+      <img id='countyLegend' src="image/legendCounty.svg">
     </div>
   </div>
   <div id="tooltip"></div>

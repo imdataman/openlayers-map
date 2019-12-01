@@ -31,16 +31,17 @@ if (mobile) {
     // document.getElementById('map').style.height = screenSize[1] + 'px';
     initialZoom = 8.5;
     fontSize = 32;
-    document.getElementById('countyLegend').style.height = 400 + 'px';
-    document.getElementById('townLegend').style.height = 400 + 'px';
-    document.getElementById('villageLegend').style.height = 400 + 'px';
+    document.getElementById('countyLegend').style.height = 30 + 'vh';
+    document.getElementById('townLegend').style.height = 30 + 'vh';
+    document.getElementById('villageLegend').style.height = 30 + 'vh';
     document.getElementById('tooltip').style.fontSize = 32 + 'px';
+    document.getElementsByClassName('floatTL')[0].style.right = '25%';
 } else {
     initialZoom = 8;
     fontSize = 18;
-    document.getElementById('countyLegend').style.height = 300 + 'px';
-    document.getElementById('townLegend').style.height = 300 + 'px';
-    document.getElementById('villageLegend').style.height = 300 + 'px';
+    document.getElementById('countyLegend').style.height = 30 + 'vh';
+    document.getElementById('townLegend').style.height = 30 + 'vh';
+    document.getElementById('villageLegend').style.height = 30 + 'vh';
 }
 
 var taichung = fromLonLat([120.6736877, 24.1415118]),
@@ -233,7 +234,8 @@ function displayTooltip(evt) {
                 return getStyle(feature, resolution, villageThreshold, true, colorPalette);
             }
         });
-        tooltip.innerHTML = feature.get('name') + "<br/>" + feature.get('pop') + "人/km²";
+        tooltip.style.padding = '20px 30px 20px 30px';
+        tooltip.innerHTML = "<span>地區</span><br/>" + feature.get('name') + "<br/><br/><span>人口密度</span><br/>" + feature.get('pop') + "人/km²";
         selectedPolygon = feature;
     }
 };
@@ -272,7 +274,11 @@ function displayTooltip(evt) {
 //     document.getElementById(id).addEventListener('click', callback);
 // }
 
-map.on('pointermove', displayTooltip);
+if (mobile) {
+    map.on('singleclick', displayTooltip);
+} else {
+    map.on('pointermove', displayTooltip);
+}
 
 // onClick('zoomToTaichung', function () {
 //     flyTo(taichung, function () {});
