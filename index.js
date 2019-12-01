@@ -310,5 +310,5 @@ function changeLegend() {
 map.on('moveend', changeLegend);
 
 if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 && mobile) {
-    document.getElementsByClassName('ol-zoom')[0].style.bottom = '10%';
+    document.getElementsByClassName('ol-zoom')[0].style.bottom = '15%';
 }
