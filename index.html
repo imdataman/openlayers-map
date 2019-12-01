@@ -29,6 +29,13 @@
       font-family: Helvetica
     }
 
+    #selectLocation {
+      position: absolute;
+      right: 13%;
+      top: 10%;
+      font-family: Helvetica
+    }
+
     #tooltip span {
       font-weight: bold;
     }
@@ -81,6 +88,12 @@
       height: 2.5em;
       width: 2.5em;
     }
+
+    select {
+      padding: 20px;
+      height: 1.5em;
+      font-size: 24px;
+    }
   </style>
 </head>
 
@@ -93,6 +106,37 @@
     </div>
   </div>
   <div id="tooltip"></div>
+  <div id="selectLocation">
+    <select name="county" id="selectCounty">
+      <option value="pending">縣市</option>
+      <option value="基隆市">基隆市</option>
+      <option value="新竹市">新竹市</option>
+      <option value="嘉義市">嘉義市</option>
+      <option value="宜蘭縣">宜蘭縣</option>
+      <option value="新竹縣">新竹縣</option>
+      <option value="苗栗縣">苗栗縣</option>
+      <option value="彰化縣">彰化縣</option>
+      <option value="南投縣">南投縣</option>
+      <option value="雲林縣">雲林縣</option>
+      <option value="嘉義縣">嘉義縣</option>
+      <option value="屏東縣">屏東縣</option>
+      <option value="花蓮縣">花蓮縣</option>
+      <option value="臺東縣">臺東縣</option>
+      <option value="澎湖縣">澎湖縣</option>
+      <option value="臺北市">臺北市</option>
+      <option value="新北市">新北市</option>
+      <option value="桃園市">桃園市</option>
+      <option value="臺中市">臺中市</option>
+      <option value="臺南市">臺南市</option>
+      <option value="高雄市">高雄市</option>
+      <option value="金門縣">金門縣</option>
+      <option value="馬祖縣">馬祖縣</option>
+    </select>
+    <select name="town"" id="selectTown">
+    </select>
+    <select name="village"" id="selectVillage">
+    </select>
+  </div>
   <!-- <button id="zoomToTaichung">台中</button>
   <button id="zoomToTaipei">台北</button> -->
   <script src="index.js"></script>

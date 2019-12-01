@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/imdataman/openlayers-map#readme",
   "dependencies": {
-    "ol": "^6.1.1"
+    "d3-request": "^1.0.6",
+    "ol": "^6.1.1",
+    "topojson": "^3.0.2"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4"

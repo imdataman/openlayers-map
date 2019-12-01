@@ -20,6 +20,7 @@ import getStyle from './js/getStyle';
 import mobileCheck from './js/mobileCheck';
 import GeoJSON from 'ol/format/GeoJSON';
 import getScreenSize from './js/getScreenSize';
+import * as request from 'd3-request';
 
 var mobile = mobileCheck();
 var screenSize = getScreenSize();
@@ -61,6 +62,8 @@ var lineWidth = 1,
 var villageThreshold = [1, 500, 1000, 2500, 5000, 10000, 25000, 50000],
     townThreshold = [1, 250, 500, 1000, 2500, 5000, 10000, 25000],
     countyThreshold = [1, 100, 250, 500, 1000, 2500, 5000, 10000];
+
+var villageFeatures = [];
 
 var halfMapWidth = document.getElementById('map').offsetWidth / 3,
     halfMapHeight = document.getElementById('map').offsetHeight / 5;
@@ -312,3 +315,97 @@ map.on('moveend', changeLegend);
 if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 && mobile) {
     document.getElementsByClassName('ol-zoom')[0].style.bottom = '15%';
 }
+
+var selectCounty = document.getElementById("selectCounty")
+var selectTown = document.getElementById("selectTown")
+var selectVillage = document.getElementById("selectVillage")
+
+selectCounty.addEventListener('change', function () {
+    selectTown.innerHTML = '';
+    var option = document.createElement("option");
+    option.text = "鄉鎮市區";
+    option.value = "pending";
+    selectTown.appendChild(option);
+    var selectedCounty = selectCounty.options[selectCounty.selectedIndex].value;
+    var jsonData = request.json("https://gist.githubusercontent.com/imdataman/156fdb2d7b5fd99a3112e4cb16149787/raw/f03b21f245e28103c35d6bfb4c22d4bbf33cf268/village-data.json",
+        function (error, json) {
+            if (error) throw error;
+            var townList = [];
+            var selectedVillage = json.features.filter(function (d) {
+                return d.properties.COUNTYNAME == selectedCounty;
+            });
+            selectedVillage.forEach(function (d) {
+                if (!townList.includes(d.properties.TOWNNAME)) {
+                    townList.push(d.properties.TOWNNAME);
+                    var option = document.createElement("option");
+                    option.text = d.properties.TOWNNAME;
+                    option.value = d.properties.TOWNNAME;
+                    selectTown.appendChild(option);
+                }
+            });
+            selectTown.addEventListener('change', function () {
+                var villageList = [];
+                selectVillage.innerHTML = '';
+                var option = document.createElement("option");
+                option.text = "村里";
+                option.value = "pending";
+                selectVillage.appendChild(option);
+                var selectedTown = selectTown.options[selectTown.selectedIndex].value;
+                selectedVillage.filter(function (d) {
+                        return d.properties.TOWNNAME == selectedTown;
+                    })
+                    .forEach(function (d) {
+                        if (!villageList.includes(d.properties.VILLNAME) && d.properties.VILLNAME !== "") {
+                            villageList.push(d.properties.VILLNAME);
+                            var option = document.createElement("option");
+                            option.text = d.properties.VILLNAME;
+                            option.value = d.properties.VILLNAME;
+                            selectVillage.appendChild(option);
+                        }
+                    });
+                selectVillage.addEventListener('change', function () {
+                    var selectedVillageName = selectVillage.options[selectVillage.selectedIndex].value;
+                    var destination = selectedVillage.filter(function (d) {
+                        return d.properties.VILLNAME == selectedVillageName;
+                    })[0];
+                    var boundingBox = [fromLonLat(destination.geometry.coordinates[0][0])[0] - 500,
+                        fromLonLat(destination.geometry.coordinates[0][0])[1] - 500,
+                        fromLonLat(destination.geometry.coordinates[0][2])[0] + 500,
+                        fromLonLat(destination.geometry.coordinates[0][2])[1] + 500
+                    ];
+
+                    map.getView().fit(boundingBox, {
+                        // duration: 4000,
+                        callback: function () {
+                            map.once('rendercomplete', function (event) {
+                                if (selectedPolygon) {
+                                    selectedPolygon.setStyle(function (feature, resolution) {
+                                        if (feature.id_.length == 5) {
+                                            return getStyle(feature, resolution, countyThreshold, false, colorPalette);
+                                        } else if (feature.id_.length == 8) {
+                                            return getStyle(feature, resolution, townThreshold, false, colorPalette);
+                                        } else {
+                                            return getStyle(feature, resolution, villageThreshold, false, colorPalette);
+                                        }
+                                    });
+                                }
+                                var feature = village.getSource().getFeatures()
+                                    .filter(function (d) {
+                                        return d.values_.name == destination.properties.COUNTYNAME + destination.properties.TOWNNAME + destination.properties.VILLNAME
+                                    })[0];
+                                feature.setStyle(function (feature, resolution) {
+                                    if (resolution < 200) {
+                                        return getStyle(feature, resolution, villageThreshold, true, colorPalette);
+                                    }
+                                });
+                                tooltip.style.display = feature ? '' : 'none';
+                                document.getElementById("tooltip").style.padding = '20px 30px 20px 30px';
+                                document.getElementById("tooltip").innerHTML = "<span>地區</span><br/>" + feature.get('name') + "<br/><br/><span>人口密度</span><br/>" + feature.get('pop') + "人/km²";
+                                selectedPolygon = feature;
+                            })
+                        }
+                    });
+                });
+            });
+        });
+});
