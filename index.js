@@ -27,10 +27,7 @@ var initialZoom
 var fontSize
 var selectedPolygon
 
-window.onresize = function() {
-    document.body.height = window.innerHeight;
-}
-window.onresize(); // called to initially set the height.
+var is_safari = navigator.userAgent.indexOf("Safari") > -1;
 
 if (mobile) {
     // document.getElementById('map').style.height = screenSize[1] + 'px';
@@ -311,3 +308,7 @@ function changeLegend() {
 }
 
 map.on('moveend', changeLegend);
+
+if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 && mobile) {
+    document.getElementsByClassName('ol-zoom')[0].style.bottom = '10%';
+}
