@@ -27,6 +27,11 @@ var initialZoom
 var fontSize
 var selectedPolygon
 
+window.onresize = function() {
+    document.body.height = window.innerHeight;
+}
+window.onresize(); // called to initially set the height.
+
 if (mobile) {
     // document.getElementById('map').style.height = screenSize[1] + 'px';
     initialZoom = 8.5;
