@@ -362,14 +362,14 @@ selectCounty.addEventListener('change', function () {
                             villageList.push(d.properties.VILLNAME);
                             var option = document.createElement("option");
                             option.text = d.properties.VILLNAME;
-                            option.value = d.properties.VILLNAME;
+                            option.value = d.properties.COUNTYNAME + d.properties.TOWNNAME + d.properties.VILLNAME;
                             selectVillage.appendChild(option);
                         }
                     });
                 selectVillage.addEventListener('change', function () {
                     var selectedVillageName = selectVillage.options[selectVillage.selectedIndex].value;
                     var destination = selectedVillage.filter(function (d) {
-                        return d.properties.VILLNAME == selectedVillageName;
+                        return d.properties.COUNTYNAME + d.properties.TOWNNAME + d.properties.VILLNAME == selectedVillageName;
                     })[0];
                     var boundingBox = [fromLonLat(destination.geometry.coordinates[0][0])[0] - 500,
                         fromLonLat(destination.geometry.coordinates[0][0])[1] - 500,
@@ -394,7 +394,7 @@ selectCounty.addEventListener('change', function () {
                                 }
                                 var feature = village.getSource().getFeatures()
                                     .filter(function (d) {
-                                        return d.values_.name == destination.properties.COUNTYNAME + destination.properties.TOWNNAME + destination.properties.VILLNAME
+                                        return d.values_.name == destination.properties.COUNTYNAME + destination.properties.TOWNNAME + destination.properties.VILLNAME;
                                     })[0];
                                 feature.setStyle(function (feature, resolution) {
                                     if (resolution < 200) {
