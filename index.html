@@ -32,10 +32,29 @@
 
     #selectLocation {
       position: absolute;
-      right: 13%;
-      top: 10%;
+      left: 13%;
+      top: 30%;
       font-family: Helvetica;
       z-index: 10000;
+    }
+
+    #mainTitle {
+      position: absolute;
+      left: 13%;
+      top: 8%;
+      font-family: Helvetica;
+      z-index: 10000;
+      font-size: 36px;
+      color: white;
+      padding: 0px 30px 0px 30px;
+      background-color: rgba(49,130,189,0.2);
+      pointer-events: none;
+    }
+
+    #byline {
+      font-size: 18px;
+      margin-top: -20px;
+      margin-bottom: 40px;
     }
 
     #tooltip span {
@@ -132,11 +151,27 @@
 .select-css option {
 	font-weight:normal;
 }
+
+.social-icon {
+  height: 32px;
+  transform: translate(0px,0.55em);
+  pointer-events: auto;
+}
+
+#github-icon {
+  height: 20px;
+  transform: translate(0px,0.15em);
+}
+
   </style>
 </head>
 
 <body>
   <div id="map" class="map" style="background-color: rgba(216,222,223,1)">
+    <div id="mainTitle">
+      <p>台灣人口密度地圖</p>
+      <p id="byline">資料來源：社會經濟資料庫</br>製作：林佳賢<a href="https://twitter.com/imandylin2" target="_blank"><img class='social-icon' src="image/Twitter_Logo_Blue.svg"></a><a href="https://github.com/imdataman" target="_blank"><img class='social-icon' id="github-icon" src="image/GitHub-Mark.svg"></a></p>
+    </div>
     <div class='floatTL'>
       <img id='villageLegend' src="image/legendVillage.svg">
       <img id='townLegend' src="image/legendTown.svg">

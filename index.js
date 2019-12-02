@@ -38,10 +38,14 @@ if (mobile) {
     document.getElementById('townLegend').style.height = 30 + 'vh';
     document.getElementById('villageLegend').style.height = 30 + 'vh';
     document.getElementById('tooltip').style.fontSize = 32 + 'px';
+    document.getElementById('tooltip').style.left = "9%";
     document.getElementsByClassName('floatTL')[0].style.right = '25%';
     document.getElementsByClassName('select-css')[0].style.fontSize = '24px';
     document.getElementsByClassName('select-css')[1].style.fontSize = '24px';
     document.getElementsByClassName('select-css')[2].style.fontSize = '24px';
+    document.getElementById('mainTitle').style.left = '8%';
+    document.getElementById('selectLocation').style.left = '9%';
+    document.getElementById('tooltip').style.bottom = '25%';
 } else {
     initialZoom = 8;
     fontSize = 18;
