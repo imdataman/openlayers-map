@@ -48,6 +48,8 @@ if (mobile) {
     document.getElementById('countyLegend').style.height = 30 + 'vh';
     document.getElementById('townLegend').style.height = 30 + 'vh';
     document.getElementById('villageLegend').style.height = 30 + 'vh';
+    document.getElementById('tooltip').style.left = "15%";
+    document.getElementById('tooltip').style.bottom = "25%";
 }
 
 var taichung = fromLonLat([120.6736877, 24.1415118]),
